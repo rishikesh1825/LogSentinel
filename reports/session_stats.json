@@ -1,0 +1,30 @@
+{
+  "total_blocks": 575061,
+  "sessionize_seconds": 17.38,
+  "by_split": {
+    "val": {
+      "split": "val",
+      "blocks": 57506,
+      "anomalies": 1684,
+      "avg_lines": 19.44,
+      "avg_distinct_templates": 7.26,
+      "unseen_lines": 0
+    },
+    "train": {
+      "split": "train",
+      "blocks": 402542,
+      "anomalies": 11787,
+      "avg_lines": 19.43,
+      "avg_distinct_templates": 7.25,
+      "unseen_lines": 0
+    },
+    "test": {
+      "split": "test",
+      "blocks": 115013,
+      "anomalies": 3367,
+      "avg_lines": 19.43,
+      "avg_distinct_templates": 7.25,
+      "unseen_lines": 0
+    }
+  }
+}

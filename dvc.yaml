@@ -77,3 +77,19 @@ stages:
     metrics:
       - reports/match_stats.json:
           cache: false
+  sessionize:
+    cmd: python -m src.parsing.sessionize
+    deps:
+      - src/parsing/sessionize.py
+      - src/parsing/match.py
+      - src/utils
+      - data/processed/matched
+      - data/processed/splits.csv
+    params:
+      - sessionize
+      - spark
+    outs:
+      - data/processed/sessions
+    metrics:
+      - reports/session_stats.json:
+          cache: false

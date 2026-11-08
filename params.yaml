@@ -39,3 +39,7 @@ match:
   search_strategy: fallback   # tree search first, then full search among same-length templates
   output: data/processed/matched
   report: reports/match_stats.json
+
+sessionize:
+  output: data/processed/sessions
+  report: reports/session_stats.json

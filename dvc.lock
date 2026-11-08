@@ -222,3 +222,47 @@ stages:
       hash: md5
       md5: 9cb69db8ba1190addac5d9b5a1a0a4c1
       size: 406
+  sessionize:
+    cmd: python -m src.parsing.sessionize
+    deps:
+    - path: data/processed/matched
+      hash: md5
+      md5: 8dbb328e8655bccf73543e27663ef6db.dir
+      size: 128718369
+      nfiles: 26
+    - path: data/processed/splits.csv
+      hash: md5
+      md5: 6cc5610d517b79ed45c184bf63aa31d0
+      size: 21282839
+    - path: src/parsing/match.py
+      hash: md5
+      md5: 36528e24a20c0366c634014499c77816
+      size: 6008
+    - path: src/parsing/sessionize.py
+      hash: md5
+      md5: 8b4ae041fe698186551431c2115b16b1
+      size: 4268
+    - path: src/utils
+      hash: md5
+      md5: 6b9d3afc3b142fd36a3156c775f72d72.dir
+      size: 8831
+      nfiles: 8
+    params:
+      params.yaml:
+        sessionize:
+          output: data/processed/sessions
+          report: reports/session_stats.json
+        spark:
+          master: local[8]
+          driver_memory: 6g
+          shuffle_partitions: 32
+    outs:
+    - path: data/processed/sessions
+      hash: md5
+      md5: 7a387bec39aefe30203b5eaa6121791c.dir
+      size: 24342629
+      nfiles: 22
+    - path: reports/session_stats.json
+      hash: md5
+      md5: 7e9a7bb4e20e4cf282d41ce2f0ae4968
+      size: 623
