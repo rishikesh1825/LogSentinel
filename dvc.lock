@@ -76,3 +76,42 @@ stages:
       hash: md5
       md5: 8d939a334d649e49475b3e69028b8f70
       size: 228
+  split:
+    cmd: python -m src.ingest.split
+    deps:
+    - path: data/raw/HDFS_v1/preprocessed/anomaly_label.csv
+      hash: md5
+      md5: 464df04e2597a0ded1a6ca492565a188
+      size: 18637554
+    - path: reports/validation.json
+      hash: md5
+      md5: dd506f99239d6a98bd6c1b691c98a50f
+      size: 1733
+    - path: src/ingest/split.py
+      hash: md5
+      md5: fb7690de1117081af6ecb958f2b882cd
+      size: 2740
+    - path: src/utils
+      hash: md5
+      md5: 6b9d3afc3b142fd36a3156c775f72d72.dir
+      size: 8831
+      nfiles: 8
+    params:
+      params.yaml:
+        data.labels: data/raw/HDFS_v1/preprocessed/anomaly_label.csv
+        split:
+          train: 0.7
+          val: 0.1
+          test: 0.2
+          seed: 42
+          output: data/processed/splits.csv
+          report: reports/split_stats.json
+    outs:
+    - path: data/processed/splits.csv
+      hash: md5
+      md5: 6cc5610d517b79ed45c184bf63aa31d0
+      size: 21282839
+    - path: reports/split_stats.json
+      hash: md5
+      md5: 6b8184fca9373d918063a9572008bff5
+      size: 290

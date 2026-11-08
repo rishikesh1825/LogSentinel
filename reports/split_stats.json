@@ -1,0 +1,18 @@
+{
+  "test": {
+    "blocks": 115013,
+    "anomalies": 3367,
+    "anomaly_ratio": 0.02927
+  },
+  "train": {
+    "blocks": 402542,
+    "anomalies": 11787,
+    "anomaly_ratio": 0.02928
+  },
+  "val": {
+    "blocks": 57506,
+    "anomalies": 1684,
+    "anomaly_ratio": 0.02928
+  },
+  "seed": 42
+}

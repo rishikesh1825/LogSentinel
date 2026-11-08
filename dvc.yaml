@@ -27,3 +27,18 @@ stages:
     metrics:
       - reports/parse_stats.json:
           cache: false
+  split:
+    cmd: python -m src.ingest.split
+    deps:
+      - src/ingest/split.py
+      - src/utils
+      - data/raw/HDFS_v1/preprocessed/anomaly_label.csv
+      - reports/validation.json
+    params:
+      - data.labels
+      - split
+    outs:
+      - data/processed/splits.csv
+    metrics:
+      - reports/split_stats.json:
+          cache: false

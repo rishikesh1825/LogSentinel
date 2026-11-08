@@ -18,3 +18,11 @@ spark:
 parse:
   output: data/processed/parsed
   report: reports/parse_stats.json
+
+split:
+  train: 0.7
+  val: 0.1
+  test: 0.2
+  seed: 42
+  output: data/processed/splits.csv
+  report: reports/split_stats.json
