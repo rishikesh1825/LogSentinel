@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Secrets / env
+.env
+*.pem
+*.key
+
+# MLflow (tracking data lives in the MLflow server, not Git)
+mlruns/
+mlartifacts/
+mlflow.db
+
+# Spark / Ray temp
+spark-warehouse/
+metastore_db/
+derby.log
+ray-temp/
+ray-spill/
+
+# Logs
+logs/
+*.log
+
+# Frontend
+node_modules/
+frontend/dist/
+frontend/build/
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/

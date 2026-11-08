@@ -1,0 +1,7 @@
+[core]
+    remote = localremote
+    analytics = false
+[cache]
+    type = "hardlink,symlink,copy"
+['remote "localremote"']
+    url = /home/rishikesh-vadlakonda/AIOps/dvc-storage/LogSentinel

@@ -1,0 +1,23 @@
+[project]
+name = "logsentinel"
+version = "0.1.0"
+description = "Anomaly detection pipeline for distributed system logs"
+requires-python = ">=3.14"
+
+[tool.black]
+line-length = 100
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+# E/W: pycodestyle (PEP 8), F: pyflakes, B: bugbear, N: naming
+select = ["E", "W", "F", "B", "N"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
