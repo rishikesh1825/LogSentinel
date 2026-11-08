@@ -1,0 +1,6 @@
+outs:
+- md5: 0024ce929181ab323f464314135dd67a.dir
+  size: 1596623414
+  nfiles: 4
+  hash: md5
+  path: HDFS_v1

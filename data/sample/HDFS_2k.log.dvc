@@ -1,0 +1,5 @@
+outs:
+- md5: b047f441fa3506b318f9410fa4b189db
+  size: 287848
+  hash: md5
+  path: HDFS_2k.log
