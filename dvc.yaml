@@ -1,0 +1,13 @@
+stages:
+  validate:
+    cmd: python -m src.ingest.validate
+    deps:
+      - src/ingest/validate.py
+      - src/utils
+      - data/raw/HDFS_v1
+    params:
+      - data
+      - validation
+    metrics:
+      - reports/validation.json:
+          cache: false

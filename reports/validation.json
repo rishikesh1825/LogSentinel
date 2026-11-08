@@ -1,0 +1,84 @@
+{
+  "mode": "full",
+  "log_file": "data/raw/HDFS_v1/HDFS.log",
+  "log_md5": "203a5f50203972827ec72f9b949b9dd7",
+  "log": {
+    "total_lines": 11175629,
+    "malformed_lines": 0,
+    "malformed_ratio": 0.0,
+    "no_block_lines": 0,
+    "no_block_ratio": 0.0,
+    "levels": {
+      "INFO": 10812836,
+      "WARN": 362793
+    },
+    "unique_blocks_in_log": 575061,
+    "scan_seconds": 11.05,
+    "lines_per_second": 1011208
+  },
+  "labels": {
+    "header_ok": true,
+    "total_blocks": 575061,
+    "invalid_rows": 0,
+    "duplicate_blocks": 0,
+    "anomaly_blocks": 16838,
+    "anomaly_ratio": 0.029280371995318757
+  },
+  "checks": [
+    {
+      "name": "log_not_empty",
+      "value": 11175629,
+      "threshold": "> 0",
+      "passed": true
+    },
+    {
+      "name": "malformed_ratio",
+      "value": 0.0,
+      "threshold": "<= 0.001",
+      "passed": true
+    },
+    {
+      "name": "no_block_ratio",
+      "value": 0.0,
+      "threshold": "<= 0.001",
+      "passed": true
+    },
+    {
+      "name": "label_header",
+      "value": true,
+      "threshold": "== True",
+      "passed": true
+    },
+    {
+      "name": "label_invalid_rows",
+      "value": 0,
+      "threshold": "== 0",
+      "passed": true
+    },
+    {
+      "name": "label_duplicates",
+      "value": 0,
+      "threshold": "== 0",
+      "passed": true
+    },
+    {
+      "name": "anomaly_ratio",
+      "value": 0.029280371995318757,
+      "threshold": "in [0.01, 0.1]",
+      "passed": true
+    },
+    {
+      "name": "log_blocks_labelled",
+      "value": 1.0,
+      "threshold": ">= 0.99",
+      "passed": true
+    },
+    {
+      "name": "label_blocks_in_log",
+      "value": 1.0,
+      "threshold": ">= 0.99",
+      "passed": true
+    }
+  ],
+  "all_passed": true
+}

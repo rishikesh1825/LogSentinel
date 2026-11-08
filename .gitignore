@@ -41,3 +41,4 @@ frontend/build/
 .DS_Store
 .vscode/
 .idea/
+reports/*_sample.json

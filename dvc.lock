@@ -1,0 +1,38 @@
+schema: '2.0'
+stages:
+  validate:
+    cmd: python -m src.ingest.validate
+    deps:
+    - path: data/raw/HDFS_v1
+      hash: md5
+      md5: 0024ce929181ab323f464314135dd67a.dir
+      size: 1596623414
+      nfiles: 4
+    - path: src/ingest/validate.py
+      hash: md5
+      md5: f40a385cdf6825f7d24f3514c382f771
+      size: 8204
+    - path: src/utils
+      hash: md5
+      md5: 84e8d51d92468894ad628a99175282b9.dir
+      size: 5376
+      nfiles: 6
+    params:
+      params.yaml:
+        data:
+          raw_log: data/raw/HDFS_v1/HDFS.log
+          labels: data/raw/HDFS_v1/preprocessed/anomaly_label.csv
+          sample_log: data/sample/HDFS_2k.log
+        validation:
+          max_malformed_ratio: 0.001
+          max_no_block_ratio: 0.001
+          min_label_coverage: 0.99
+          anomaly_ratio_range:
+          - 0.01
+          - 0.1
+          report: reports/validation.json
+    outs:
+    - path: reports/validation.json
+      hash: md5
+      md5: c9a3c9e00a91bad74f106d4ff9e95063
+      size: 1733

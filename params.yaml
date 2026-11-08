@@ -1,0 +1,11 @@
+data:
+  raw_log: data/raw/HDFS_v1/HDFS.log
+  labels: data/raw/HDFS_v1/preprocessed/anomaly_label.csv
+  sample_log: data/sample/HDFS_2k.log
+
+validation:
+  max_malformed_ratio: 0.001       # at most 0.1% of lines may fail the format regex
+  max_no_block_ratio: 0.001        # at most 0.1% of lines may lack a block ID
+  min_label_coverage: 0.99         # >= 99% of labelled blocks must appear in the logs
+  anomaly_ratio_range: [0.01, 0.10]
+  report: reports/validation.json
