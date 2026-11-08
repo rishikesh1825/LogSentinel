@@ -26,3 +26,11 @@ split:
   seed: 42
   output: data/processed/splits.csv
   report: reports/split_stats.json
+
+templates:
+  sim_th: 0.85              # high: events differing by one word (e.g. terminating vs Interrupted.) stay separate
+  depth: 4                  # depth of the Drain prefix tree
+  max_children: 100         # max children per tree node
+  state_path: models/drain3/drain3_state.bin
+  templates_csv: models/drain3/templates.csv
+  report: reports/template_stats.json

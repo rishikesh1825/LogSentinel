@@ -42,3 +42,7 @@ frontend/build/
 .vscode/
 .idea/
 reports/*_sample.json
+
+# Development outputs from --sample runs
+data/processed/sample/
+models/drain3/sample/

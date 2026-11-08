@@ -42,3 +42,20 @@ stages:
     metrics:
       - reports/split_stats.json:
           cache: false
+  mine_templates:
+    cmd: python -m src.parsing.mine_templates
+    deps:
+      - src/parsing/mine_templates.py
+      - src/parsing/drain_config.py
+      - src/utils
+      - data/processed/parsed
+      - data/processed/splits.csv
+    params:
+      - templates
+      - spark
+    outs:
+      - models/drain3/drain3_state.bin
+      - models/drain3/templates.csv
+    metrics:
+      - reports/template_stats.json:
+          cache: false
