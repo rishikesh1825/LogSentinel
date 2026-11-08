@@ -1,0 +1,11 @@
+{
+  "master": "local[8]",
+  "cores": 8,
+  "input_lines": 11175629,
+  "parsed_lines": 11175629,
+  "dropped_lines": 0,
+  "output_rows": 11175629,
+  "unique_blocks": 575061,
+  "parse_seconds": 23.76,
+  "lines_per_second": 470268
+}

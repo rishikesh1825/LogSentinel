@@ -11,3 +11,19 @@ stages:
     metrics:
       - reports/validation.json:
           cache: false
+  parse:
+    cmd: python -m src.parsing.parse
+    deps:
+      - src/parsing/parse.py
+      - src/utils
+      - data/raw/HDFS_v1/HDFS.log
+      - reports/validation.json
+    params:
+      - data.raw_log
+      - spark
+      - parse
+    outs:
+      - data/processed/parsed
+    metrics:
+      - reports/parse_stats.json:
+          cache: false

@@ -17,6 +17,8 @@ line-length = 100
 [tool.ruff.lint]
 # E/W: pycodestyle (PEP 8), F: pyflakes, B: bugbear, N: naming
 select = ["E", "W", "F", "B", "N"]
+# N812: allow the standard PySpark convention `functions as F`
+ignore = ["N812"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

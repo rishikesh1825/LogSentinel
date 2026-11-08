@@ -9,3 +9,12 @@ validation:
   min_label_coverage: 0.99         # >= 99% of labelled blocks must appear in the logs
   anomaly_ratio_range: [0.01, 0.10]
   report: reports/validation.json
+
+spark:
+  master: local[8]            # 8 cores; benchmark overrides this with local[1], local[2], ...
+  driver_memory: 6g           # local mode: driver = executor, so this is Spark's total memory
+  shuffle_partitions: 32      # partitions used when grouping by block (default 200 is too many locally)
+
+parse:
+  output: data/processed/parsed
+  report: reports/parse_stats.json

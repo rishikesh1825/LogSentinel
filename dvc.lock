@@ -14,9 +14,9 @@ stages:
       size: 8204
     - path: src/utils
       hash: md5
-      md5: 84e8d51d92468894ad628a99175282b9.dir
-      size: 5376
-      nfiles: 6
+      md5: 6b9d3afc3b142fd36a3156c775f72d72.dir
+      size: 8831
+      nfiles: 8
     params:
       params.yaml:
         data:
@@ -34,5 +34,45 @@ stages:
     outs:
     - path: reports/validation.json
       hash: md5
-      md5: c9a3c9e00a91bad74f106d4ff9e95063
+      md5: dd506f99239d6a98bd6c1b691c98a50f
       size: 1733
+  parse:
+    cmd: python -m src.parsing.parse
+    deps:
+    - path: data/raw/HDFS_v1/HDFS.log
+      hash: md5
+      md5: 203a5f50203972827ec72f9b949b9dd7
+      size: 1577982906
+    - path: reports/validation.json
+      hash: md5
+      md5: dd506f99239d6a98bd6c1b691c98a50f
+      size: 1733
+    - path: src/parsing/parse.py
+      hash: md5
+      md5: e728ddbcfb7f9f0b4ed7e14e9bec344c
+      size: 4422
+    - path: src/utils
+      hash: md5
+      md5: 6b9d3afc3b142fd36a3156c775f72d72.dir
+      size: 8831
+      nfiles: 8
+    params:
+      params.yaml:
+        data.raw_log: data/raw/HDFS_v1/HDFS.log
+        parse:
+          output: data/processed/parsed
+          report: reports/parse_stats.json
+        spark:
+          master: local[8]
+          driver_memory: 6g
+          shuffle_partitions: 32
+    outs:
+    - path: data/processed/parsed
+      hash: md5
+      md5: 8fb8d204626378832e0be0779de76684.dir
+      size: 371048243
+      nfiles: 26
+    - path: reports/parse_stats.json
+      hash: md5
+      md5: 8d939a334d649e49475b3e69028b8f70
+      size: 228
