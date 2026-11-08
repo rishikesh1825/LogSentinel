@@ -1,0 +1,24 @@
+{
+  "master": "local[8]",
+  "cores": 8,
+  "rows": 11175629,
+  "match_seconds": 27.34,
+  "rows_per_second": 408720,
+  "by_split": {
+    "val": {
+      "lines": 1117820,
+      "unseen": 0,
+      "unseen_ratio": 0.0
+    },
+    "train": {
+      "lines": 7823104,
+      "unseen": 0,
+      "unseen_ratio": 0.0
+    },
+    "test": {
+      "lines": 2234705,
+      "unseen": 0,
+      "unseen_ratio": 0.0
+    }
+  }
+}

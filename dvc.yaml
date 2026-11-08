@@ -59,3 +59,21 @@ stages:
     metrics:
       - reports/template_stats.json:
           cache: false
+  match:
+    cmd: python -m src.parsing.match
+    deps:
+      - src/parsing/match.py
+      - src/parsing/drain_config.py
+      - src/utils
+      - data/processed/parsed
+      - data/processed/splits.csv
+      - models/drain3/drain3_state.bin
+    params:
+      - templates
+      - match
+      - spark
+    outs:
+      - data/processed/matched
+    metrics:
+      - reports/match_stats.json:
+          cache: false

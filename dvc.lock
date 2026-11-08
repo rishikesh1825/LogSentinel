@@ -166,3 +166,59 @@ stages:
       hash: md5
       md5: bb9166e56ea3dd7832007639f2b5b48a
       size: 174
+  match:
+    cmd: python -m src.parsing.match
+    deps:
+    - path: data/processed/parsed
+      hash: md5
+      md5: 8fb8d204626378832e0be0779de76684.dir
+      size: 371048243
+      nfiles: 26
+    - path: data/processed/splits.csv
+      hash: md5
+      md5: 6cc5610d517b79ed45c184bf63aa31d0
+      size: 21282839
+    - path: models/drain3/drain3_state.bin
+      hash: md5
+      md5: 765a5dcf7feab7713b502830e75a6a38
+      size: 3012
+    - path: src/parsing/drain_config.py
+      hash: md5
+      md5: b68a147e38d2ab7079d236ce3f293fac
+      size: 1512
+    - path: src/parsing/match.py
+      hash: md5
+      md5: 36528e24a20c0366c634014499c77816
+      size: 6008
+    - path: src/utils
+      hash: md5
+      md5: 6b9d3afc3b142fd36a3156c775f72d72.dir
+      size: 8831
+      nfiles: 8
+    params:
+      params.yaml:
+        match:
+          search_strategy: fallback
+          output: data/processed/matched
+          report: reports/match_stats.json
+        spark:
+          master: local[8]
+          driver_memory: 6g
+          shuffle_partitions: 32
+        templates:
+          sim_th: 0.85
+          depth: 4
+          max_children: 100
+          state_path: models/drain3/drain3_state.bin
+          templates_csv: models/drain3/templates.csv
+          report: reports/template_stats.json
+    outs:
+    - path: data/processed/matched
+      hash: md5
+      md5: 8dbb328e8655bccf73543e27663ef6db.dir
+      size: 128718369
+      nfiles: 26
+    - path: reports/match_stats.json
+      hash: md5
+      md5: 9cb69db8ba1190addac5d9b5a1a0a4c1
+      size: 406
