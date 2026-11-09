@@ -43,3 +43,9 @@ match:
 sessionize:
   output: data/processed/sessions
   report: reports/session_stats.json
+
+benchmark:
+  cores: [1, 2, 4, 8, 12, 16]
+  stages: [parse, match]
+  report: reports/benchmark.json
+  figure: reports/figures/03_throughput_vs_cores.png

@@ -1,0 +1,101 @@
+{
+  "lines": 11175629,
+  "results": [
+    {
+      "stage": "parse",
+      "cores": 1,
+      "seconds": 73.99,
+      "lines_per_second": 151042,
+      "speedup": 1.0,
+      "efficiency": 1.0
+    },
+    {
+      "stage": "parse",
+      "cores": 2,
+      "seconds": 36.85,
+      "lines_per_second": 303274,
+      "speedup": 2.01,
+      "efficiency": 1.0
+    },
+    {
+      "stage": "parse",
+      "cores": 4,
+      "seconds": 24.66,
+      "lines_per_second": 453189,
+      "speedup": 3.0,
+      "efficiency": 0.75
+    },
+    {
+      "stage": "parse",
+      "cores": 8,
+      "seconds": 19.7,
+      "lines_per_second": 567291,
+      "speedup": 3.76,
+      "efficiency": 0.47
+    },
+    {
+      "stage": "parse",
+      "cores": 12,
+      "seconds": 14.91,
+      "lines_per_second": 749539,
+      "speedup": 4.96,
+      "efficiency": 0.41
+    },
+    {
+      "stage": "parse",
+      "cores": 16,
+      "seconds": 13.34,
+      "lines_per_second": 837753,
+      "speedup": 5.55,
+      "efficiency": 0.35
+    },
+    {
+      "stage": "match",
+      "cores": 1,
+      "seconds": 96.27,
+      "lines_per_second": 116086,
+      "speedup": 1.0,
+      "efficiency": 1.0
+    },
+    {
+      "stage": "match",
+      "cores": 2,
+      "seconds": 60.3,
+      "lines_per_second": 185334,
+      "speedup": 1.6,
+      "efficiency": 0.8
+    },
+    {
+      "stage": "match",
+      "cores": 4,
+      "seconds": 38.3,
+      "lines_per_second": 291792,
+      "speedup": 2.51,
+      "efficiency": 0.63
+    },
+    {
+      "stage": "match",
+      "cores": 8,
+      "seconds": 27.65,
+      "lines_per_second": 404182,
+      "speedup": 3.48,
+      "efficiency": 0.43
+    },
+    {
+      "stage": "match",
+      "cores": 12,
+      "seconds": 20.29,
+      "lines_per_second": 550795,
+      "speedup": 4.74,
+      "efficiency": 0.4
+    },
+    {
+      "stage": "match",
+      "cores": 16,
+      "seconds": 21.61,
+      "lines_per_second": 517151,
+      "speedup": 4.45,
+      "efficiency": 0.28
+    }
+  ]
+}
