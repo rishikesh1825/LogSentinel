@@ -12,3 +12,4 @@ PyYAML==6.0.3
 requests==2.34.2
 scikit-learn==1.9.0
 uvicorn==0.52.4
+cachetools==8.0.0

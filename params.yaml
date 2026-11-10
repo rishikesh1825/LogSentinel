@@ -56,3 +56,26 @@ featurize:
   output_dir: data/processed/features
   vectorizer: models/features/vectorizer.json
   report: reports/featurize_stats.json
+
+train:
+  experiment: LogSentinel
+  serve_model: lr             # which model the web app serves: lr or iforest
+  seed: 42
+  top_k_events: 5             # events shown in the explanation for each session
+  lr:
+    C: [0.01, 0.1, 1.0, 10.0]
+    class_weight: balanced    # compensates the 3% anomaly rate; null = no weighting
+    max_iter: 2000
+  iforest:
+    n_estimators: [100, 200]
+    max_samples: [256, 1024]
+    train_on_normal_only: true
+  model_dir: models/model
+  figures_dir: reports/figures/training
+  report: reports/train_metrics.json
+
+package:
+  registered_name: LogSentinel
+  min_improvement: 0.0        # new version becomes champion if test F1 >= champion F1 + this
+  output: models/pyfunc
+  report: reports/package.json

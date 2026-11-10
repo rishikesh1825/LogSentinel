@@ -38,7 +38,7 @@ stages:
       md5: 5a3e18b606a44c68d86cf1c12f917aed
       size: 1732
   parse:
-    cmd: python -m src.utils.run_stage parse --report reports/parse_stats.json
+    cmd: python -m src.utils.run_stage parse --report reports/parse_stats.json 
       -- python -m src.parsing.parse
     deps:
     - path: data/raw/HDFS_v1/HDFS.log
@@ -79,7 +79,7 @@ stages:
       md5: 3cd36d8c651b93f3d83cfd376348278f
       size: 228
   split:
-    cmd: python -m src.utils.run_stage split --report reports/split_stats.json
+    cmd: python -m src.utils.run_stage split --report reports/split_stats.json 
       -- python -m src.ingest.split
     deps:
     - path: data/raw/HDFS_v1/preprocessed/anomaly_label.csv
@@ -119,7 +119,7 @@ stages:
       md5: 6b8184fca9373d918063a9572008bff5
       size: 290
   mine_templates:
-    cmd: python -m src.utils.run_stage mine_templates --report
+    cmd: python -m src.utils.run_stage mine_templates --report 
       reports/template_stats.json -- python -m src.parsing.mine_templates
     deps:
     - path: data/processed/parsed
@@ -171,7 +171,7 @@ stages:
       md5: cf5786ac399a41de9f2fe7da32ee9403
       size: 174
   match:
-    cmd: python -m src.utils.run_stage match --report reports/match_stats.json
+    cmd: python -m src.utils.run_stage match --report reports/match_stats.json 
       -- python -m src.parsing.match
     deps:
     - path: data/processed/parsed
@@ -228,7 +228,7 @@ stages:
       md5: 8653d001aba324340316c0b8e50e6e89
       size: 406
   sessionize:
-    cmd: python -m src.utils.run_stage sessionize --report
+    cmd: python -m src.utils.run_stage sessionize --report 
       reports/session_stats.json -- python -m src.parsing.sessionize
     deps:
     - path: data/processed/matched
@@ -273,7 +273,7 @@ stages:
       md5: 8cc2f4cb121844664368c1e52183b83c
       size: 623
   featurize:
-    cmd: python -m src.utils.run_stage featurize --report
+    cmd: python -m src.utils.run_stage featurize --report 
       reports/featurize_stats.json -- python -m src.features.featurize
     deps:
     - path: data/processed/sessions
@@ -314,3 +314,151 @@ stages:
       hash: md5
       md5: ffadac2cafe3ea2b391fb20cb3e07772
       size: 466
+  train:
+    cmd: python -m src.utils.run_stage train --report reports/train_metrics.json
+      -- python -m src.training.train
+    deps:
+    - path: data/processed/features
+      hash: md5
+      md5: ee21a9e60fc4cb7127400aa7f8fdd54b.dir
+      size: 9423773
+      nfiles: 3
+    - path: models/drain3/templates.csv
+      hash: md5
+      md5: a80eda898e6edcbb93b68f8dedbb58a8
+      size: 4818
+    - path: models/features/vectorizer.json
+      hash: md5
+      md5: 4bf6737400fac45861dafff8d9063981
+      size: 1601
+    - path: src/features/vectorizer.py
+      hash: md5
+      md5: 976ef366f53a31f019de7b1547c52bb2
+      size: 5026
+    - path: src/training/train.py
+      hash: md5
+      md5: bed2ed6962f0cb9e77ee505d3a001b59
+      size: 17237
+    - path: src/utils
+      hash: md5
+      md5: a5d6f6192c5a937697e1212fe7d77be2.dir
+      size: 21225
+      nfiles: 10
+    params:
+      params.yaml:
+        featurize:
+          min_block_freq: 1
+          use_tfidf: false
+          output_dir: data/processed/features
+          vectorizer: models/features/vectorizer.json
+          report: reports/featurize_stats.json
+        templates:
+          sim_th: 0.85
+          depth: 4
+          max_children: 100
+          state_path: models/drain3/drain3_state.bin
+          templates_csv: models/drain3/templates.csv
+          report: reports/template_stats.json
+        train:
+          experiment: LogSentinel
+          serve_model: lr
+          seed: 42
+          top_k_events: 5
+          lr:
+            C:
+            - 0.01
+            - 0.1
+            - 1.0
+            - 10.0
+            class_weight: balanced
+            max_iter: 2000
+          iforest:
+            n_estimators:
+            - 100
+            - 200
+            max_samples:
+            - 256
+            - 1024
+            train_on_normal_only: true
+          model_dir: models/model
+          figures_dir: reports/figures/training
+          report: reports/train_metrics.json
+    outs:
+    - path: models/model
+      hash: md5
+      md5: 7e441ac579712c049a64a707363154c5.dir
+      size: 4468
+      nfiles: 2
+    - path: reports/figures/training
+      hash: md5
+      md5: 1af9d3c65c006e01a391d04a04f16635.dir
+      size: 248093
+      nfiles: 4
+    - path: reports/train_metrics.json
+      hash: md5
+      md5: 5c5ffe7c3527dc9d0a72e73105047516
+      size: 1288
+  package:
+    cmd: python -m src.utils.run_stage package --report reports/package.json -- 
+      python -m src.training.package
+    deps:
+    - path: models/drain3/drain3_state.bin
+      hash: md5
+      md5: 765a5dcf7feab7713b502830e75a6a38
+      size: 3012
+    - path: models/drain3/templates.csv
+      hash: md5
+      md5: a80eda898e6edcbb93b68f8dedbb58a8
+      size: 4818
+    - path: models/features/vectorizer.json
+      hash: md5
+      md5: 4bf6737400fac45861dafff8d9063981
+      size: 1601
+    - path: models/model
+      hash: md5
+      md5: 7e441ac579712c049a64a707363154c5.dir
+      size: 4468
+      nfiles: 2
+    - path: requirements.txt
+      hash: md5
+      md5: 93ded76806fd14b5a8d24d8cbe13c229
+      size: 258
+    - path: src/features/vectorizer.py
+      hash: md5
+      md5: 976ef366f53a31f019de7b1547c52bb2
+      size: 5026
+    - path: src/model
+      hash: md5
+      md5: fed1a9a7d0d38422f032c551d9b4b050.dir
+      size: 20340
+      nfiles: 4
+    - path: src/parsing/drain_config.py
+      hash: md5
+      md5: b68a147e38d2ab7079d236ce3f293fac
+      size: 1512
+    - path: src/training/package.py
+      hash: md5
+      md5: f91cc4734d5dd10c4db84d8b3566097e
+      size: 5732
+    - path: src/utils
+      hash: md5
+      md5: a5d6f6192c5a937697e1212fe7d77be2.dir
+      size: 21225
+      nfiles: 10
+    params:
+      params.yaml:
+        package:
+          registered_name: LogSentinel
+          min_improvement: 0.0
+          output: models/pyfunc
+          report: reports/package.json
+    outs:
+    - path: models/pyfunc
+      hash: md5
+      md5: ce1f18f3033720557aed224e9577cd13.dir
+      size: 129795
+      nfiles: 38
+    - path: reports/package.json
+      hash: md5
+      md5: b6baa91b6ff41b0e631f911c74796c37
+      size: 270

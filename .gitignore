@@ -46,3 +46,18 @@ reports/*_sample.json
 # Development outputs from --sample runs
 data/processed/sample/
 models/drain3/sample/
+
+# MLflow server data, Docker stack runtime data and secrets
+mlflow_data/
+.env
+certs/
+monitoring/alertmanager/webhook_token
+retrain_requests/
+feedback/
+
+# Test outputs (the Markdown report IS committed)
+reports/tests/junit.xml
+
+# Local demo files and local-only frontend config
+demo/
+frontend/site/config.js

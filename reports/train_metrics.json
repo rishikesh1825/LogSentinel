@@ -1,0 +1,64 @@
+{
+  "served_model": "lr",
+  "threshold": 0.9754776358604431,
+  "mlflow_run_id": "9e63e6caf7c04a97ac51690b61569298",
+  "lr": {
+    "val": {
+      "precision": 0.9929,
+      "recall": 0.99644,
+      "f1": 0.99467,
+      "pr_auc": 0.99732,
+      "roc_auc": 0.99995,
+      "tp": 1678,
+      "fp": 12,
+      "fn": 6,
+      "tn": 55810
+    },
+    "best_params": {
+      "C": 10.0,
+      "threshold": 0.9754776358604431,
+      "fit_seconds": 7.415523410993046
+    },
+    "test": {
+      "precision": 0.99554,
+      "recall": 0.99465,
+      "f1": 0.9951,
+      "pr_auc": 0.99938,
+      "roc_auc": 0.99998,
+      "tp": 3349,
+      "fp": 15,
+      "fn": 18,
+      "tn": 111631
+    }
+  },
+  "iforest": {
+    "val": {
+      "precision": 0.59664,
+      "recall": 0.21081,
+      "f1": 0.31154,
+      "pr_auc": 0.14969,
+      "roc_auc": 0.75782,
+      "tp": 355,
+      "fp": 240,
+      "fn": 1329,
+      "tn": 55582
+    },
+    "best_params": {
+      "n_estimators": 100,
+      "max_samples": 1024,
+      "threshold": 0.6928984584952153,
+      "fit_seconds": 1.10976269900857
+    },
+    "test": {
+      "precision": 0.62284,
+      "recall": 0.21384,
+      "f1": 0.31837,
+      "pr_auc": 0.1594,
+      "roc_auc": 0.75907,
+      "tp": 720,
+      "fp": 436,
+      "fn": 2647,
+      "tn": 111210
+    }
+  }
+}

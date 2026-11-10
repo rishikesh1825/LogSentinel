@@ -117,3 +117,45 @@ stages:
     metrics:
       - reports/featurize_stats.json:
           cache: false
+
+  train:
+    cmd: python -m src.utils.run_stage train --report reports/train_metrics.json -- python -m src.training.train
+    deps:
+      - src/training/train.py
+      - src/features/vectorizer.py
+      - src/utils
+      - data/processed/features
+      - models/features/vectorizer.json
+      - models/drain3/templates.csv
+    params:
+      - train
+      - featurize
+      - templates
+    outs:
+      - models/model
+      - reports/figures/training:
+          cache: false
+    metrics:
+      - reports/train_metrics.json:
+          cache: false
+
+  package:
+    cmd: python -m src.utils.run_stage package --report reports/package.json -- python -m src.training.package
+    deps:
+      - src/model
+      - src/training/package.py
+      - src/features/vectorizer.py
+      - src/parsing/drain_config.py
+      - src/utils
+      - models/drain3/drain3_state.bin
+      - models/drain3/templates.csv
+      - models/features/vectorizer.json
+      - models/model
+      - requirements.txt
+    params:
+      - package
+    outs:
+      - models/pyfunc
+    metrics:
+      - reports/package.json:
+          cache: false
