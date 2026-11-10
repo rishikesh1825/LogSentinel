@@ -67,8 +67,49 @@ Python transfer, scheduling). Pipeline uses `local[8]` (~75% of peak, leaves cor
 
 ## Features & models
 
-_To be filled in after Phases 4-5 (vectorizer, LR vs Isolation Forest, threshold, results)._
+**M1. Features:** one count column per training template (52) + `__unseen__` (53 features).
+The vocabulary is fitted on train only; the same `EventCountVectorizer` runs inside the served model.
+Result: 0 rows with unseen templates in train/val/test; ~7.25 non-zero features per block.
+
+**M2. Models and results (test set, threshold chosen on validation max-F1):**
+
+| Model | Precision | Recall | F1 | PR-AUC |
+|---|---|---|---|---|
+| Logistic Regression (log1p -> scale -> LR, class_weight=balanced, C=10) | 0.9955 | 0.9947 | 0.9951 | 0.9994 |
+| Isolation Forest (normal training blocks only) | 0.6228 | 0.2138 | 0.3184 | 0.1594 |
+
+LR: 15 false alarms and 18 misses out of 115,013 test blocks; all C values within 0.0005 val PR-AUC
+(stable). IF fails because many anomalies differ from normal blocks by ONE extra event out of ~19
+- they are not "easy to isolate" in count space, and IF's subsamples rarely contain rare events.
+With labels available, supervised learning is clearly the right choice; IF documents why.
+
+**M3. Explainability:** per-session contribution = standardised feature value x LR coefficient;
+the top 5 positive contributions are shown with template text. Raw coefficients alone can mislead
+(correlated features: `ask to replicate` and `Starting thread to transfer` always co-occur and share
+the weight 1.3158 equally). Strongest feature: fewer `Receiving block` events (coef -8.9) = missing
+replicas.
+
+**M4. Packaging & promotion:** one MLflow pyfunc model (drain3 state + templates + vectorizer +
+classifier + meta + `src` code). Alias `champion` moves to a new version only if its test F1 is >=
+the current champion's; rollback = move the alias. Served version traced to a clean commit
+(`git_dirty=False`; dirty check covers code/config only because DVC deletes tracked outputs
+before re-running a stage).
+
+**M5. Complete sessions only (limitation).** The first 1,000 raw lines gave 98% "anomalies": every
+block was cut off after a few seconds, so its later events were missing - exactly the pattern the
+model learned means failure. The model is trained and evaluated on complete sessions; demo files
+are built from complete test blocks (`scripts/make_demo_logs.py`): 38/40 correct, 0 false alarms.
+
+**M6. Borderline verdict (UX for the precision/recall trade-off).** The 2 demo misses scored 0.967
+and 0.9746 vs threshold 0.9755 (balanced class weights push probabilities up, so max-F1 puts the
+cutoff high). Served and offline scores matched exactly -> no serving bug. The UI keeps the
+validated threshold for "Problem" but shows risk >= 50% below it as "Borderline" so a human looks.
 
 ## Serving & operations
 
-_To be filled in after Phases 7-10 (loose coupling, security, drift -> retraining loop)._
+**S1. Loose coupling:** browser -> backend -> model server, REST only; every URL from env vars;
+the UI only knows `API_BASE_URL` (config.js).
+**S2. Backend:** input limits (50k lines, 5 MB), non-HDFS lines skipped and counted, uniform error
+shape, 503 with a friendly message when the model server is down, API key on `/api/v1/*`.
+Latency: 60 ms for 1,000 lines, 26 ms for the 823-line demo file (AC-3 target < 2 s).
+_Phases 9-10 (Docker, monitoring, drift loop): add notes here._

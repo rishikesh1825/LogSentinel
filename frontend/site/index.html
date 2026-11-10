@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LogSentinel - Log anomaly detection</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">◆</span>
+      <div>
+        <h1>LogSentinel</h1>
+        <p class="tagline">Finds problems in HDFS system logs and explains why</p>
+      </div>
+    </div>
+    <div id="model-badge" class="badge badge-muted" title="Model currently served">model: …</div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="analyze" role="tab">Analyze logs</button>
+    <button class="tab" data-tab="pipeline" role="tab">Pipeline console</button>
+    <button class="tab" data-tab="monitoring" role="tab">Monitoring</button>
+    <button class="tab" data-tab="help" role="tab">Help</button>
+  </nav>
+
+  <main>
+    <!-- ============================ ANALYZE ============================ -->
+    <section id="tab-analyze" class="panel active">
+      <div class="card">
+        <h2>1. Add your logs</h2>
+        <p class="hint">Paste HDFS log lines below, or choose a <code>.log</code>/<code>.txt</code> file.
+          Each line should look like:<br>
+          <code class="example">081109 203518 143 INFO dfs.DataNode$DataXceiver: Receiving block blk_-1608… src: /10.250.19.102:54106 …</code></p>
+        <textarea id="log-input" rows="10" placeholder="Paste log lines here…" spellcheck="false"></textarea>
+        <div class="row">
+          <label class="file-btn">
+            <input type="file" id="file-input" accept=".log,.txt,text/plain">
+            <span>Choose file…</span>
+          </label>
+          <span id="file-name" class="hint"></span>
+          <span class="spacer"></span>
+          <button id="btn-sample" class="btn btn-secondary" type="button">Load example logs</button>
+          <button id="btn-clear" class="btn btn-secondary" type="button">Clear</button>
+          <button id="btn-analyze" class="btn btn-primary" type="button">Analyze</button>
+        </div>
+        <p id="input-stats" class="hint"></p>
+      </div>
+
+      <div id="results" class="hidden">
+        <div class="card">
+          <h2>2. Summary</h2>
+          <div id="summary" class="stats"></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h2>3. Sessions <span class="hint">(one per HDFS block, most suspicious first)</span></h2>
+            <div class="row">
+              <label><input type="checkbox" id="only-anomalies"> Show only problems and borderline</label>
+            </div>
+            <div class="table-wrap">
+              <table id="sessions-table">
+                <thead><tr><th>Block</th><th>Lines</th><th>Risk</th><th>Verdict</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card" id="detail-card">
+            <h2>4. Why was it flagged?</h2>
+            <div id="detail"><p class="hint">Click a session on the left to see the log events behind its verdict.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= PIPELINE CONSOLE ========================= -->
+    <section id="tab-pipeline" class="panel">
+      <div class="card">
+        <div class="row">
+          <h2>Pipeline stages</h2>
+          <span class="spacer"></span>
+          <button id="btn-refresh" class="btn btn-secondary" type="button">Refresh</button>
+          <button id="btn-retrain" class="btn btn-primary" type="button">Request retraining</button>
+        </div>
+        <p class="hint">Data flows left to right: validate → parse / split → mine templates → match → sessionize → featurize → train → package.</p>
+        <div id="stages" class="stages"></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h2>Recent stage runs</h2>
+          <div class="table-wrap"><table id="runs-table">
+            <thead><tr><th>Stage</th><th>Result</th><th>Duration</th><th>Throughput</th><th>Finished (UTC)</th></tr></thead>
+            <tbody></tbody></table></div>
+        </div>
+        <div class="card">
+          <h2>Training runs (MLflow)</h2>
+          <div class="table-wrap"><table id="mlflow-table">
+            <thead><tr><th>Run</th><th>Status</th><th>Commit</th><th>LR F1</th><th>IF F1</th></tr></thead>
+            <tbody></tbody></table></div>
+          <p class="hint"><a id="mlflow-link" target="_blank" rel="noopener">Open MLflow UI ↗</a></p>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h2>Errors and failures</h2>
+          <div id="errors"></div>
+        </div>
+        <div class="card">
+          <h2>Throughput vs Spark cores</h2>
+          <div id="benchmark"></div>
+          <div id="retrain-status" class="hint"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ MONITORING ============================ -->
+    <section id="tab-monitoring" class="panel">
+      <div class="card">
+        <div class="row"><h2>Live monitoring (Grafana)</h2><span class="spacer"></span>
+          <a id="grafana-link" class="btn btn-secondary" target="_blank" rel="noopener">Open in Grafana ↗</a></div>
+        <p class="hint">Request rate, latency, anomaly rate, unseen-template (drift) rate, pipeline metrics and container health. Refreshes every 5 seconds.</p>
+        <iframe id="grafana-frame" title="Grafana dashboard" loading="lazy"></iframe>
+      </div>
+    </section>
+
+    <!-- =============================== HELP =============================== -->
+    <section id="tab-help" class="panel">
+      <div class="card prose">
+        <h2>How to use LogSentinel</h2>
+        <ol>
+          <li><b>Add logs.</b> On <i>Analyze logs</i>, paste HDFS log lines or choose a log file (up to 5 MB / 50,000 lines). Not sure what to try? Click <b>Load example logs</b>.</li>
+          <li><b>Click Analyze.</b> LogSentinel groups the lines by HDFS block (one block = one “session”) and checks each block's story.</li>
+          <li><b>Read the summary.</b> It shows how many lines were read, how many sessions were found and how many look like problems.</li>
+          <li><b>Look at the sessions.</b> Red rows (<i>Problem</i>) are likely problems; orange rows (<i>Borderline</i>) are just below the problem threshold and worth a look. The <i>Risk</i> bar shows how confident the model is.</li>
+          <li><b>Click a session</b> to see <i>why</i>: the log events that pushed it towards “problem”, in plain words.</li>
+        </ol>
+        <h3>What do the words mean?</h3>
+        <dl>
+          <dt>Block / session</dt><dd>HDFS stores files in pieces called blocks. All log lines about one block form its “session”.</dd>
+          <dt>Problem (anomaly)</dt><dd>A block whose events look unlike healthy blocks — for example a failed write, a timeout or an unexpected deletion.</dd>
+          <dt>Risk</dt><dd>How strongly the model believes the block has a problem (0–100%).</dd>
+          <dt>Unseen events</dt><dd>Log messages the model has never seen before. Many of them can mean the system changed and the model may need retraining.</dd>
+        </dl>
+        <h3>Something went wrong?</h3>
+        <ul>
+          <li><b>“None of the lines look like HDFS log lines”</b> – check that each line starts with date, time, process id, level and component, like the example.</li>
+          <li><b>“The anomaly model is not available”</b> – the model service is starting or stopped. Wait a minute and try again, or ask the administrator.</li>
+          <li><b>“Too many lines” / “File too large”</b> – split the file into smaller parts.</li>
+        </ul>
+        <p>The full user manual is in <code>docs/user_manual.md</code>.</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
