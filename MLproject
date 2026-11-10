@@ -1,0 +1,21 @@
+name: logsentinel
+
+# Same pinned environment for dev and test. Run with the current venv:
+#   mlflow run . -e <entry point> --env-manager local
+python_env: python_env.yaml
+
+entry_points:
+  main:
+    command: "dvc repro"
+  validate:
+    command: "python -m src.ingest.validate"
+  featurize:
+    command: "python -m src.features.featurize"
+  train:
+    command: "python -m src.training.train"
+  package:
+    command: "python -m src.training.package"
+  benchmark:
+    command: "python -m src.parsing.benchmark"
+  test:
+    command: "pytest tests/unit -q"

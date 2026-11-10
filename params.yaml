@@ -61,7 +61,7 @@ train:
   experiment: LogSentinel
   serve_model: lr             # which model the web app serves: lr or iforest
   seed: 42
-  top_k_events: 5             # events shown in the explanation for each session
+  top_k_events: 6             # events shown in the explanation for each session
   lr:
     C: [0.01, 0.1, 1.0, 10.0]
     class_weight: balanced    # compensates the 3% anomaly rate; null = no weighting

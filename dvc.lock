@@ -363,7 +363,7 @@ stages:
           experiment: LogSentinel
           serve_model: lr
           seed: 42
-          top_k_events: 5
+          top_k_events: 6
           lr:
             C:
             - 0.01
@@ -386,7 +386,7 @@ stages:
     outs:
     - path: models/model
       hash: md5
-      md5: 511654cf881eba46e5509421e0133a02.dir
+      md5: dbb34c2c0286e17b11c1b83686515ba6.dir
       size: 4468
       nfiles: 2
     - path: reports/figures/training
@@ -396,8 +396,8 @@ stages:
       nfiles: 4
     - path: reports/train_metrics.json
       hash: md5
-      md5: 56c2d51378d33a79acd60ef8a2fb2a89
-      size: 1290
+      md5: c42530055e7da02b197daa7d91f3de80
+      size: 1289
   package:
     cmd: python -m src.utils.run_stage package --report reports/package.json -- 
       python -m src.training.package
@@ -416,7 +416,7 @@ stages:
       size: 1601
     - path: models/model
       hash: md5
-      md5: 511654cf881eba46e5509421e0133a02.dir
+      md5: dbb34c2c0286e17b11c1b83686515ba6.dir
       size: 4468
       nfiles: 2
     - path: requirements.txt
@@ -455,10 +455,10 @@ stages:
     outs:
     - path: models/pyfunc
       hash: md5
-      md5: 09b48fca137ac2130e243c0d7843cc19.dir
+      md5: 2c58ac7167b4b0bdb1f5dea1aebf8024.dir
       size: 130097
       nfiles: 38
     - path: reports/package.json
       hash: md5
-      md5: 5d27c048436e583aef2204d6a888d8fd
+      md5: 0453d0bab31afd380f8c2b099ff0e9c4
       size: 271

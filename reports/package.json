@@ -1,10 +1,10 @@
 {
   "registered_name": "LogSentinel",
-  "new_version": "3",
+  "new_version": "4",
   "new_test_f1": 0.9951,
-  "previous_champion_version": "2",
+  "previous_champion_version": "3",
   "previous_champion_test_f1": 0.9951,
   "promoted_to_champion": true,
   "alias": "champion",
-  "mlflow_run_id": "1aabcd1b4bca447bb2c1a334b6321ba5"
+  "mlflow_run_id": "192dbf85db8d40fdb0a2a8d736cb24e9"
 }

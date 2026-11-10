@@ -1,3 +1,5 @@
+# Hooks run on `git commit` unless a hook says otherwise.
+default_stages: [pre-commit]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -25,3 +27,11 @@ repos:
         entry: ruff check
         language: system
         types: [python]
+      # Local CI: lint + unit tests + DVC status, before every `git push`.
+      - id: local-ci
+        name: local CI (scripts/ci.sh)
+        entry: bash scripts/ci.sh
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
