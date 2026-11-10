@@ -1,0 +1,24 @@
+{
+  "n_features": 53,
+  "splits": {
+    "train": {
+      "rows": 402542,
+      "anomalies": 11787,
+      "avg_nonzero_features": 7.25,
+      "rows_with_unseen": 0
+    },
+    "val": {
+      "rows": 57506,
+      "anomalies": 1684,
+      "avg_nonzero_features": 7.26,
+      "rows_with_unseen": 0
+    },
+    "test": {
+      "rows": 115013,
+      "anomalies": 3367,
+      "avg_nonzero_features": 7.25,
+      "rows_with_unseen": 0
+    }
+  },
+  "featurize_seconds": 8.39
+}

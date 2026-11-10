@@ -3,6 +3,7 @@ repos:
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
+        exclude: ^dvc\.lock$   # machine-written by DVC; long cmds wrap with trailing spaces
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files   # stops you committing big data files to Git by mistake

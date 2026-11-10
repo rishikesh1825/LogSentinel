@@ -2,8 +2,8 @@
   "master": "local[8]",
   "cores": 8,
   "rows": 11175629,
-  "match_seconds": 27.34,
-  "rows_per_second": 408720,
+  "match_seconds": 31.78,
+  "rows_per_second": 351608,
   "by_split": {
     "val": {
       "lines": 1117820,

@@ -1,6 +1,9 @@
+# LogSentinel pipeline (DVC DAG). Run everything with:  dvc repro
+# Every stage runs through src.utils.run_stage, which records the run in
+# logs/pipeline_runs.jsonl and pushes stage metrics to the Prometheus Pushgateway.
 stages:
   validate:
-    cmd: python -m src.ingest.validate
+    cmd: python -m src.utils.run_stage validate --report reports/validation.json -- python -m src.ingest.validate
     deps:
       - src/ingest/validate.py
       - src/utils
@@ -11,8 +14,9 @@ stages:
     metrics:
       - reports/validation.json:
           cache: false
+
   parse:
-    cmd: python -m src.parsing.parse
+    cmd: python -m src.utils.run_stage parse --report reports/parse_stats.json -- python -m src.parsing.parse
     deps:
       - src/parsing/parse.py
       - src/utils
@@ -27,8 +31,9 @@ stages:
     metrics:
       - reports/parse_stats.json:
           cache: false
+
   split:
-    cmd: python -m src.ingest.split
+    cmd: python -m src.utils.run_stage split --report reports/split_stats.json -- python -m src.ingest.split
     deps:
       - src/ingest/split.py
       - src/utils
@@ -42,8 +47,9 @@ stages:
     metrics:
       - reports/split_stats.json:
           cache: false
+
   mine_templates:
-    cmd: python -m src.parsing.mine_templates
+    cmd: python -m src.utils.run_stage mine_templates --report reports/template_stats.json -- python -m src.parsing.mine_templates
     deps:
       - src/parsing/mine_templates.py
       - src/parsing/drain_config.py
@@ -59,8 +65,9 @@ stages:
     metrics:
       - reports/template_stats.json:
           cache: false
+
   match:
-    cmd: python -m src.parsing.match
+    cmd: python -m src.utils.run_stage match --report reports/match_stats.json -- python -m src.parsing.match
     deps:
       - src/parsing/match.py
       - src/parsing/drain_config.py
@@ -77,8 +84,9 @@ stages:
     metrics:
       - reports/match_stats.json:
           cache: false
+
   sessionize:
-    cmd: python -m src.parsing.sessionize
+    cmd: python -m src.utils.run_stage sessionize --report reports/session_stats.json -- python -m src.parsing.sessionize
     deps:
       - src/parsing/sessionize.py
       - src/parsing/match.py
@@ -92,4 +100,20 @@ stages:
       - data/processed/sessions
     metrics:
       - reports/session_stats.json:
+          cache: false
+
+  featurize:
+    cmd: python -m src.utils.run_stage featurize --report reports/featurize_stats.json -- python -m src.features.featurize
+    deps:
+      - src/features
+      - src/utils
+      - data/processed/sessions
+    params:
+      - featurize
+      - sessionize.output
+    outs:
+      - data/processed/features
+      - models/features/vectorizer.json
+    metrics:
+      - reports/featurize_stats.json:
           cache: false

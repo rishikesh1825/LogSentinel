@@ -49,3 +49,10 @@ benchmark:
   stages: [parse, match]
   report: reports/benchmark.json
   figure: reports/figures/03_throughput_vs_cores.png
+
+featurize:
+  min_block_freq: 1           # keep rare templates (EDA: rare events = failure signals)
+  use_tfidf: false            # plain counts; set true to try TF-IDF weighting
+  output_dir: data/processed/features
+  vectorizer: models/features/vectorizer.json
+  report: reports/featurize_stats.json

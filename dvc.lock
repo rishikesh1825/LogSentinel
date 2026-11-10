@@ -1,7 +1,8 @@
 schema: '2.0'
 stages:
   validate:
-    cmd: python -m src.ingest.validate
+    cmd: python -m src.utils.run_stage validate --report reports/validation.json
+      -- python -m src.ingest.validate
     deps:
     - path: data/raw/HDFS_v1
       hash: md5
@@ -14,9 +15,9 @@ stages:
       size: 8204
     - path: src/utils
       hash: md5
-      md5: 6b9d3afc3b142fd36a3156c775f72d72.dir
-      size: 8831
-      nfiles: 8
+      md5: a5d6f6192c5a937697e1212fe7d77be2.dir
+      size: 21225
+      nfiles: 10
     params:
       params.yaml:
         data:
@@ -34,10 +35,11 @@ stages:
     outs:
     - path: reports/validation.json
       hash: md5
-      md5: dd506f99239d6a98bd6c1b691c98a50f
-      size: 1733
+      md5: 5a3e18b606a44c68d86cf1c12f917aed
+      size: 1732
   parse:
-    cmd: python -m src.parsing.parse
+    cmd: python -m src.utils.run_stage parse --report reports/parse_stats.json
+      -- python -m src.parsing.parse
     deps:
     - path: data/raw/HDFS_v1/HDFS.log
       hash: md5
@@ -45,17 +47,17 @@ stages:
       size: 1577982906
     - path: reports/validation.json
       hash: md5
-      md5: dd506f99239d6a98bd6c1b691c98a50f
-      size: 1733
+      md5: 5a3e18b606a44c68d86cf1c12f917aed
+      size: 1732
     - path: src/parsing/parse.py
       hash: md5
       md5: e728ddbcfb7f9f0b4ed7e14e9bec344c
       size: 4422
     - path: src/utils
       hash: md5
-      md5: 6b9d3afc3b142fd36a3156c775f72d72.dir
-      size: 8831
-      nfiles: 8
+      md5: a5d6f6192c5a937697e1212fe7d77be2.dir
+      size: 21225
+      nfiles: 10
     params:
       params.yaml:
         data.raw_log: data/raw/HDFS_v1/HDFS.log
@@ -69,15 +71,16 @@ stages:
     outs:
     - path: data/processed/parsed
       hash: md5
-      md5: 8fb8d204626378832e0be0779de76684.dir
+      md5: 8926988e5fdc29e5e0db7fd2fbb3b5d3.dir
       size: 371048243
       nfiles: 26
     - path: reports/parse_stats.json
       hash: md5
-      md5: 8d939a334d649e49475b3e69028b8f70
+      md5: 3cd36d8c651b93f3d83cfd376348278f
       size: 228
   split:
-    cmd: python -m src.ingest.split
+    cmd: python -m src.utils.run_stage split --report reports/split_stats.json
+      -- python -m src.ingest.split
     deps:
     - path: data/raw/HDFS_v1/preprocessed/anomaly_label.csv
       hash: md5
@@ -85,17 +88,17 @@ stages:
       size: 18637554
     - path: reports/validation.json
       hash: md5
-      md5: dd506f99239d6a98bd6c1b691c98a50f
-      size: 1733
+      md5: 5a3e18b606a44c68d86cf1c12f917aed
+      size: 1732
     - path: src/ingest/split.py
       hash: md5
       md5: fb7690de1117081af6ecb958f2b882cd
       size: 2740
     - path: src/utils
       hash: md5
-      md5: 6b9d3afc3b142fd36a3156c775f72d72.dir
-      size: 8831
-      nfiles: 8
+      md5: a5d6f6192c5a937697e1212fe7d77be2.dir
+      size: 21225
+      nfiles: 10
     params:
       params.yaml:
         data.labels: data/raw/HDFS_v1/preprocessed/anomaly_label.csv
@@ -116,11 +119,12 @@ stages:
       md5: 6b8184fca9373d918063a9572008bff5
       size: 290
   mine_templates:
-    cmd: python -m src.parsing.mine_templates
+    cmd: python -m src.utils.run_stage mine_templates --report
+      reports/template_stats.json -- python -m src.parsing.mine_templates
     deps:
     - path: data/processed/parsed
       hash: md5
-      md5: 8fb8d204626378832e0be0779de76684.dir
+      md5: 8926988e5fdc29e5e0db7fd2fbb3b5d3.dir
       size: 371048243
       nfiles: 26
     - path: data/processed/splits.csv
@@ -137,9 +141,9 @@ stages:
       size: 4922
     - path: src/utils
       hash: md5
-      md5: 6b9d3afc3b142fd36a3156c775f72d72.dir
-      size: 8831
-      nfiles: 8
+      md5: a5d6f6192c5a937697e1212fe7d77be2.dir
+      size: 21225
+      nfiles: 10
     params:
       params.yaml:
         spark:
@@ -164,14 +168,15 @@ stages:
       size: 4818
     - path: reports/template_stats.json
       hash: md5
-      md5: bb9166e56ea3dd7832007639f2b5b48a
+      md5: cf5786ac399a41de9f2fe7da32ee9403
       size: 174
   match:
-    cmd: python -m src.parsing.match
+    cmd: python -m src.utils.run_stage match --report reports/match_stats.json
+      -- python -m src.parsing.match
     deps:
     - path: data/processed/parsed
       hash: md5
-      md5: 8fb8d204626378832e0be0779de76684.dir
+      md5: 8926988e5fdc29e5e0db7fd2fbb3b5d3.dir
       size: 371048243
       nfiles: 26
     - path: data/processed/splits.csv
@@ -192,9 +197,9 @@ stages:
       size: 6008
     - path: src/utils
       hash: md5
-      md5: 6b9d3afc3b142fd36a3156c775f72d72.dir
-      size: 8831
-      nfiles: 8
+      md5: a5d6f6192c5a937697e1212fe7d77be2.dir
+      size: 21225
+      nfiles: 10
     params:
       params.yaml:
         match:
@@ -215,19 +220,20 @@ stages:
     outs:
     - path: data/processed/matched
       hash: md5
-      md5: 8dbb328e8655bccf73543e27663ef6db.dir
+      md5: 485c5fafd86503a4844024701134f56d.dir
       size: 128718369
       nfiles: 26
     - path: reports/match_stats.json
       hash: md5
-      md5: 9cb69db8ba1190addac5d9b5a1a0a4c1
+      md5: 8653d001aba324340316c0b8e50e6e89
       size: 406
   sessionize:
-    cmd: python -m src.parsing.sessionize
+    cmd: python -m src.utils.run_stage sessionize --report
+      reports/session_stats.json -- python -m src.parsing.sessionize
     deps:
     - path: data/processed/matched
       hash: md5
-      md5: 8dbb328e8655bccf73543e27663ef6db.dir
+      md5: 485c5fafd86503a4844024701134f56d.dir
       size: 128718369
       nfiles: 26
     - path: data/processed/splits.csv
@@ -244,9 +250,9 @@ stages:
       size: 4268
     - path: src/utils
       hash: md5
-      md5: 6b9d3afc3b142fd36a3156c775f72d72.dir
-      size: 8831
-      nfiles: 8
+      md5: a5d6f6192c5a937697e1212fe7d77be2.dir
+      size: 21225
+      nfiles: 10
     params:
       params.yaml:
         sessionize:
@@ -259,10 +265,52 @@ stages:
     outs:
     - path: data/processed/sessions
       hash: md5
-      md5: 7a387bec39aefe30203b5eaa6121791c.dir
+      md5: e12e9b6d35e3256cca8b5a4e4baa42b9.dir
       size: 24342629
       nfiles: 22
     - path: reports/session_stats.json
       hash: md5
-      md5: 7e9a7bb4e20e4cf282d41ce2f0ae4968
+      md5: 8cc2f4cb121844664368c1e52183b83c
       size: 623
+  featurize:
+    cmd: python -m src.utils.run_stage featurize --report
+      reports/featurize_stats.json -- python -m src.features.featurize
+    deps:
+    - path: data/processed/sessions
+      hash: md5
+      md5: e12e9b6d35e3256cca8b5a4e4baa42b9.dir
+      size: 24342629
+      nfiles: 22
+    - path: src/features
+      hash: md5
+      md5: 59f85a923e21cdfd678e76b5cf880b94.dir
+      size: 24700
+      nfiles: 6
+    - path: src/utils
+      hash: md5
+      md5: a5d6f6192c5a937697e1212fe7d77be2.dir
+      size: 21225
+      nfiles: 10
+    params:
+      params.yaml:
+        featurize:
+          min_block_freq: 1
+          use_tfidf: false
+          output_dir: data/processed/features
+          vectorizer: models/features/vectorizer.json
+          report: reports/featurize_stats.json
+        sessionize.output: data/processed/sessions
+    outs:
+    - path: data/processed/features
+      hash: md5
+      md5: ee21a9e60fc4cb7127400aa7f8fdd54b.dir
+      size: 9423773
+      nfiles: 3
+    - path: models/features/vectorizer.json
+      hash: md5
+      md5: 4bf6737400fac45861dafff8d9063981
+      size: 1601
+    - path: reports/featurize_stats.json
+      hash: md5
+      md5: ffadac2cafe3ea2b391fb20cb3e07772
+      size: 466
