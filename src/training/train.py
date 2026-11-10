@@ -58,6 +58,9 @@ from src.utils.config import load_params  # noqa: E402
 from src.utils.logger import get_logger  # noqa: E402
 
 logger = get_logger("stage.train")
+# Inputs that define a run. Stage outputs (reports/, models/) are excluded: DVC deletes
+# them before re-running a stage, which would otherwise always look 'dirty'.
+CODE_PATHS = ("src", "params.yaml", "dvc.yaml", "requirements.txt")
 
 
 # ---------------------------------------------------------------- helpers
@@ -68,14 +71,17 @@ def load_split(features_dir: Path, split: str) -> tuple[np.ndarray, np.ndarray]:
 
 
 def git_info() -> dict:
-    """Return the current git commit and whether the working tree is dirty."""
+    """Return the current git commit and whether code/config differ from it."""
     try:
         commit = subprocess.run(
             ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True
         ).stdout.strip()
         dirty = bool(
             subprocess.run(
-                ["git", "status", "--porcelain"], capture_output=True, text=True, check=True
+                ["git", "status", "--porcelain", "--", *CODE_PATHS],
+                capture_output=True,
+                text=True,
+                check=True,
             ).stdout.strip()
         )
     except subprocess.CalledProcessError, FileNotFoundError:
