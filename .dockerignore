@@ -1,0 +1,18 @@
+# Keep the Docker build context small: images only need backend/, frontend/, docker/.
+data/
+models/
+mlflow_data/
+mlruns/
+logs/
+reports/
+notebooks/
+docs/
+certs/
+feedback/
+retrain_requests/
+demo/
+.dvc/
+.git/
+**/__pycache__/
+**/.pytest_cache/
+*.log

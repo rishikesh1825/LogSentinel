@@ -41,9 +41,12 @@ def read_throughput(report: Path | None) -> float | None:
         data = json.loads(report.read_text())
     except json.JSONDecodeError:
         return None
-    for key in THROUGHPUT_KEYS:
-        if isinstance(data.get(key), (int, float)):
-            return float(data[key])
+    # Top level first, then one level down (e.g. validation.json -> log.lines_per_second).
+    sections = [data] + [v for v in data.values() if isinstance(v, dict)]
+    for section in sections:
+        for key in THROUGHPUT_KEYS:
+            if isinstance(section.get(key), (int, float)):
+                return float(section[key])
     return None
 
 

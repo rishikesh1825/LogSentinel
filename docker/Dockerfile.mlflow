@@ -1,0 +1,24 @@
+# One image for two services:
+#   mlflow  - MLflow tracking server + model registry
+#   model   - `mlflow models serve` for the registered LogSentinel model
+# It contains exactly the runtime libraries the pyfunc model needs (no Spark/Java).
+#
+# Wheels are downloaded on the host first (fast) and installed offline here:
+#   pip download -r docker/requirements-mlflow.txt -d docker/wheels --only-binary=:all:
+#   pip download drain3==0.9.11 --no-deps -d docker/wheels
+FROM python:3.14-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+RUN useradd --create-home --uid 1000 app
+WORKDIR /srv
+
+COPY docker/requirements-mlflow.txt /srv/requirements-mlflow.txt
+COPY docker/wheels /srv/wheels
+RUN pip install --no-index --find-links /srv/wheels -r /srv/requirements-mlflow.txt \
+ && pip install --no-index --find-links /srv/wheels --no-deps drain3==0.9.11 \
+ && rm -rf /srv/wheels
+
+USER app

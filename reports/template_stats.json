@@ -2,8 +2,8 @@
   "training_lines": 7823104,
   "n_templates": 52,
   "templates_with_<10_lines": 17,
-  "mine_seconds": 160.93,
-  "lines_per_second": 48611,
+  "mine_seconds": 162.62,
+  "lines_per_second": 48105,
   "sim_th": 0.85,
   "depth": 4
 }

@@ -1,0 +1,59 @@
+groups:
+  - name: logsentinel
+    rules:
+      # Data drift: share of analysed lines that matched no known template.
+      # Training/validation/test baseline is exactly 0%, so >1% means new log events.
+      - alert: UnseenTemplateDrift
+        expr: |
+          sum(rate(logsentinel_unseen_lines_total[5m]))
+            / clamp_min(sum(rate(logsentinel_lines_processed_total[5m])), 1e-9) > 0.01
+        for: 1m
+        labels:
+          severity: warning
+          action: retrain
+        annotations:
+          summary: "Unseen log templates above 1% - possible data drift, retraining requested"
+
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(logsentinel_http_requests_total{status=~"5.."}[5m]))
+            / clamp_min(sum(rate(logsentinel_http_requests_total[5m])), 1e-9) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "More than 5% of API requests fail with 5xx"
+
+      - alert: ModelServerDown
+        expr: logsentinel_model_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "The MLflow model server does not answer /ping"
+
+      - alert: BackendDown
+        expr: up{job="backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus cannot scrape the backend"
+
+      - alert: HighPredictLatency
+        expr: |
+          histogram_quantile(0.95,
+            sum by (le) (rate(logsentinel_request_latency_seconds_bucket{endpoint=~"/api/v1/predict.*"}[5m]))
+          ) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "p95 predict latency above 2 s"
+
+      - alert: PipelineStageFailed
+        expr: logsentinel_pipeline_stage_success == 0
+        labels:
+          severity: warning
+        annotations:
+          summary: "Pipeline stage {{ $labels.stage }} failed on its last run"

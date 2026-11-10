@@ -1,0 +1,13 @@
+# Static web UI served by nginx over HTTPS. Configuration (backend URL, API key)
+# is injected at start-up from environment variables - see frontend/40-config-js.sh.
+FROM nginx:alpine
+
+COPY frontend/nginx.conf.template /etc/nginx/templates/default.conf.template
+COPY frontend/40-config-js.sh /docker-entrypoint.d/40-config-js.sh
+RUN chmod +x /docker-entrypoint.d/40-config-js.sh
+COPY frontend/site/ /usr/share/nginx/html/
+RUN rm -f /usr/share/nginx/html/config.js
+
+EXPOSE 80 443
+HEALTHCHECK --interval=15s --timeout=5s --retries=5 \
+  CMD wget -q --spider --no-check-certificate https://127.0.0.1/ || exit 1
