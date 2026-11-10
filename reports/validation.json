@@ -13,8 +13,8 @@
       "WARN": 362793
     },
     "unique_blocks_in_log": 575061,
-    "scan_seconds": 17.95,
-    "lines_per_second": 622762
+    "scan_seconds": 18.04,
+    "lines_per_second": 619571
   },
   "labels": {
     "header_ok": true,

@@ -35,7 +35,7 @@ stages:
     outs:
     - path: reports/validation.json
       hash: md5
-      md5: 5a3e18b606a44c68d86cf1c12f917aed
+      md5: d274e98b9e8798a6ffd8201206f58074
       size: 1732
   parse:
     cmd: python -m src.utils.run_stage parse --report reports/parse_stats.json 
@@ -47,7 +47,7 @@ stages:
       size: 1577982906
     - path: reports/validation.json
       hash: md5
-      md5: 5a3e18b606a44c68d86cf1c12f917aed
+      md5: d274e98b9e8798a6ffd8201206f58074
       size: 1732
     - path: src/parsing/parse.py
       hash: md5
@@ -71,12 +71,12 @@ stages:
     outs:
     - path: data/processed/parsed
       hash: md5
-      md5: 8926988e5fdc29e5e0db7fd2fbb3b5d3.dir
+      md5: 72143d71ae5a257969f8bc44bd8e52a2.dir
       size: 371048243
       nfiles: 26
     - path: reports/parse_stats.json
       hash: md5
-      md5: 3cd36d8c651b93f3d83cfd376348278f
+      md5: aece03a4405c72c78fd61acd95fe24f0
       size: 228
   split:
     cmd: python -m src.utils.run_stage split --report reports/split_stats.json 
@@ -88,7 +88,7 @@ stages:
       size: 18637554
     - path: reports/validation.json
       hash: md5
-      md5: 5a3e18b606a44c68d86cf1c12f917aed
+      md5: d274e98b9e8798a6ffd8201206f58074
       size: 1732
     - path: src/ingest/split.py
       hash: md5
@@ -124,7 +124,7 @@ stages:
     deps:
     - path: data/processed/parsed
       hash: md5
-      md5: 8926988e5fdc29e5e0db7fd2fbb3b5d3.dir
+      md5: 72143d71ae5a257969f8bc44bd8e52a2.dir
       size: 371048243
       nfiles: 26
     - path: data/processed/splits.csv
@@ -168,7 +168,7 @@ stages:
       size: 4818
     - path: reports/template_stats.json
       hash: md5
-      md5: cf5786ac399a41de9f2fe7da32ee9403
+      md5: 95e69964bd11b00e7f3b799db4e5f715
       size: 174
   match:
     cmd: python -m src.utils.run_stage match --report reports/match_stats.json 
@@ -176,7 +176,7 @@ stages:
     deps:
     - path: data/processed/parsed
       hash: md5
-      md5: 8926988e5fdc29e5e0db7fd2fbb3b5d3.dir
+      md5: 72143d71ae5a257969f8bc44bd8e52a2.dir
       size: 371048243
       nfiles: 26
     - path: data/processed/splits.csv
@@ -220,12 +220,12 @@ stages:
     outs:
     - path: data/processed/matched
       hash: md5
-      md5: 485c5fafd86503a4844024701134f56d.dir
+      md5: 79c50af05ec218d8541ee16fd4b1e51b.dir
       size: 128718369
       nfiles: 26
     - path: reports/match_stats.json
       hash: md5
-      md5: 8653d001aba324340316c0b8e50e6e89
+      md5: b4b92ad9ceb1e689b42d76a473911564
       size: 406
   sessionize:
     cmd: python -m src.utils.run_stage sessionize --report 
@@ -233,7 +233,7 @@ stages:
     deps:
     - path: data/processed/matched
       hash: md5
-      md5: 485c5fafd86503a4844024701134f56d.dir
+      md5: 79c50af05ec218d8541ee16fd4b1e51b.dir
       size: 128718369
       nfiles: 26
     - path: data/processed/splits.csv
@@ -265,12 +265,12 @@ stages:
     outs:
     - path: data/processed/sessions
       hash: md5
-      md5: e12e9b6d35e3256cca8b5a4e4baa42b9.dir
+      md5: 25df0d7f988fc3bdd05ae8c83c9881a6.dir
       size: 24342629
       nfiles: 22
     - path: reports/session_stats.json
       hash: md5
-      md5: 8cc2f4cb121844664368c1e52183b83c
+      md5: 3e4bf51a2b40d3fc3d42ce6df5a9c4db
       size: 623
   featurize:
     cmd: python -m src.utils.run_stage featurize --report 
@@ -278,7 +278,7 @@ stages:
     deps:
     - path: data/processed/sessions
       hash: md5
-      md5: e12e9b6d35e3256cca8b5a4e4baa42b9.dir
+      md5: 25df0d7f988fc3bdd05ae8c83c9881a6.dir
       size: 24342629
       nfiles: 22
     - path: src/features
@@ -312,8 +312,8 @@ stages:
       size: 1601
     - path: reports/featurize_stats.json
       hash: md5
-      md5: ffadac2cafe3ea2b391fb20cb3e07772
-      size: 466
+      md5: d8d2390ac0d165d68060b9385cb5d9da
+      size: 465
   train:
     cmd: python -m src.utils.run_stage train --report reports/train_metrics.json
       -- python -m src.training.train
@@ -337,8 +337,8 @@ stages:
       size: 5026
     - path: src/training/train.py
       hash: md5
-      md5: bed2ed6962f0cb9e77ee505d3a001b59
-      size: 17237
+      md5: 71487e055ed818aa6ad3091cb7268f97
+      size: 17539
     - path: src/utils
       hash: md5
       md5: a5d6f6192c5a937697e1212fe7d77be2.dir
@@ -386,7 +386,7 @@ stages:
     outs:
     - path: models/model
       hash: md5
-      md5: 7e441ac579712c049a64a707363154c5.dir
+      md5: 511654cf881eba46e5509421e0133a02.dir
       size: 4468
       nfiles: 2
     - path: reports/figures/training
@@ -396,8 +396,8 @@ stages:
       nfiles: 4
     - path: reports/train_metrics.json
       hash: md5
-      md5: 5c5ffe7c3527dc9d0a72e73105047516
-      size: 1288
+      md5: 56c2d51378d33a79acd60ef8a2fb2a89
+      size: 1290
   package:
     cmd: python -m src.utils.run_stage package --report reports/package.json -- 
       python -m src.training.package
@@ -416,7 +416,7 @@ stages:
       size: 1601
     - path: models/model
       hash: md5
-      md5: 7e441ac579712c049a64a707363154c5.dir
+      md5: 511654cf881eba46e5509421e0133a02.dir
       size: 4468
       nfiles: 2
     - path: requirements.txt
@@ -455,10 +455,10 @@ stages:
     outs:
     - path: models/pyfunc
       hash: md5
-      md5: ce1f18f3033720557aed224e9577cd13.dir
-      size: 129795
+      md5: 09b48fca137ac2130e243c0d7843cc19.dir
+      size: 130097
       nfiles: 38
     - path: reports/package.json
       hash: md5
-      md5: b6baa91b6ff41b0e631f911c74796c37
-      size: 270
+      md5: 5d27c048436e583aef2204d6a888d8fd
+      size: 271
