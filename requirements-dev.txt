@@ -7,3 +7,4 @@ pre_commit==4.7.0
 ipykernel==7.3.0
 jupyterlab==4.6.3
 matplotlib==3.11.1
+httpx==0.28.1

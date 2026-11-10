@@ -18,8 +18,20 @@ line-length = 100
 # E/W: pycodestyle (PEP 8), F: pyflakes, B: bugbear, N: naming
 select = ["E", "W", "F", "B", "N"]
 # N812: allow the standard PySpark convention `functions as F`
-ignore = ["N812"]
+# N803/N806: allow ML naming conventions (X, X_train, C) used by scikit-learn
+ignore = ["N812", "N803", "N806"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's dependency markers are meant to be used as argument defaults.
+extend-immutable-calls = [
+    "fastapi.Depends", "fastapi.File", "fastapi.Header", "fastapi.Query", "fastapi.Body",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+markers = [
+    "spark: starts a local Spark session (slower)",
+    "model: needs the packaged model in models/pyfunc",
+    "e2e: needs the full Docker Compose stack running (set E2E=1)",
+]
