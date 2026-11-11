@@ -112,4 +112,18 @@ the UI only knows `API_BASE_URL` (config.js).
 **S2. Backend:** input limits (50k lines, 5 MB), non-HDFS lines skipped and counted, uniform error
 shape, 503 with a friendly message when the model server is down, API key on `/api/v1/*`.
 Latency: 60 ms for 1,000 lines, 26 ms for the 823-line demo file (AC-3 target < 2 s).
-_Phases 9-10 (Docker, monitoring, drift loop): add notes here._
+**S3. Docker Compose, 10 services:** mlflow, model, backend, frontend (nginx HTTPS), prometheus,
+pushgateway, alertmanager, grafana, cadvisor, node-exporter. Non-root containers; secrets in `.env`.
+Model image built offline from host-prepared wheels (in-Docker downloads ran at ~40 kB/s; drain3 has
+no wheel on PyPI, so it is built with `pip wheel`). Frontend health check uses 127.0.0.1 (Alpine
+resolves localhost to IPv6, nginx listens on IPv4).
+**S4. Monitoring:** Prometheus scrapes backend, Pushgateway (batch pipeline pushes stage metrics),
+cAdvisor (per-container CPU/memory), node-exporter (host) - 7/7 targets UP. cAdvisor v0.52.1 with
+DOCKER_API_VERSION=1.44 (Docker 29 rejects API 1.41); container names unavailable with the containerd
+image store, so panels label containers by short Docker ID.
+**S5. Drift -> retraining loop (demonstrated):** 20% never-seen lines -> UnseenTemplateDrift fired
+(> 1% for 1 min) -> Alertmanager webhook (bearer token) -> backend queued a request ->
+`retrain_watcher.py` ran `dvc repro` + forced train/package -> new version promoted (F1 not worse)
+-> model container restarted. Rollback = move the `champion` alias.
+**S6. Resilience (UI-8):** model container stopped -> UI shows "model is not available", API 503,
+ModelServerDown alert; service recovered after restart.
