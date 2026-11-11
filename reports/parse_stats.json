@@ -6,6 +6,6 @@
   "dropped_lines": 0,
   "output_rows": 11175629,
   "unique_blocks": 575061,
-  "parse_seconds": 31.23,
-  "lines_per_second": 357825
+  "parse_seconds": 31.01,
+  "lines_per_second": 360416
 }
