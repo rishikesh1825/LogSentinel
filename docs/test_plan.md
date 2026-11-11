@@ -114,7 +114,7 @@ See `reports/tests/test_report.md` (generated) and the acceptance-criteria table
 | AC-4 | >= 3,500 lines/s | match ~388k lines/s (8 cores) | Yes | `reports/match_stats.json`, benchmark |
 | AC-5 | validation all_passed | true (9/9 checks) | Yes | `reports/validation.json` |
 | AC-6 | no leakage | split before mining; vectorizer fitted on train; 0% unseen in all splits | Yes | `reports/match_stats.json`, `featurize_stats.json` |
-| AC-7 | reproducible from Git + DVC | _fill in after the fresh-clone check (Phase 12)_ | | screenshot |
+| AC-7 | reproducible from Git + DVC | Fresh clone + `dvc pull` (126 files restored): "Data and pipelines are up to date." | Yes | screenshot 66 |
 | AC-8 | unit + integration 100% pass | 39/39 | Yes | test report |
 | AC-9 | e2e 100% pass | 5/5 | Yes | test report |
 | AC-10 | all Prometheus targets up, live dashboard | 7/7 targets UP | Yes | screenshots 53, 55, 56 |

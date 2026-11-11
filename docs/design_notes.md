@@ -127,3 +127,9 @@ image store, so panels label containers by short Docker ID.
 -> model container restarted. Rollback = move the `champion` alias.
 **S6. Resilience (UI-8):** model container stopped -> UI shows "model is not available", API 503,
 ModelServerDown alert; service recovered after restart.
+
+**R1. Fresh-clone reproducibility.** The first fresh-clone check failed: `dvc status` reported
+`src/utils`, `src/features` and `src/model` as modified, because DVC hashes code *folders* and had
+included machine-local `__pycache__/*.pyc` files. Fix: `.dvcignore` excludes `__pycache__` and `*.pyc`.
+After `dvc repro`, a new clone + `dvc pull` reports "Data and pipelines are up to date" (AC-7).
+Lesson: anything a stage lists as a dependency must contain only files that are in Git.
