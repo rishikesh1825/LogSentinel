@@ -8,6 +8,151 @@ Prometheus/Grafana and Docker Compose. Everything runs locally (no cloud).
 * Test plan: `docs/test_plan.md` · Test report: `reports/tests/test_report.md`
 * User manual: `docs/user_manual.md` · Design decisions: `docs/design_notes.md`
 
+## Project demonstration video
+
+[Watch the LogSentinel project demonstration](https://drive.google.com/file/d/1ZScpYXvXHtyEHFTrMUZ_85VbHonAn_j4/view?usp=sharing)
+
+## Repository structure
+
+The repository is organised by responsibility. The main application code is under `src/`, `backend/` and `frontend/`; pipeline, deployment and monitoring configuration are kept in their own directories; and `docs/`, `reports/` and `tests/` contain the supporting documentation and verification material.
+
+```text
+LogSentinel/
+├── .dvc/                        # DVC local metadata and cache
+├── backend/                     # FastAPI application
+│   ├── app/
+│   │   ├── config.py            # Application configuration
+│   │   ├── logging_setup.py     # Backend logging configuration
+│   │   ├── main.py              # API routes and application entry point
+│   │   ├── metrics.py           # Prometheus metrics exposed by the backend
+│   │   ├── model_client.py      # Client used to call the MLflow model server
+│   │   ├── pipeline_info.py     # Pipeline status and run information
+│   │   └── schemas.py           # Request and response schemas
+│   └── requirements.txt         # Backend-specific dependencies
+│
+├── certs/                       # Local TLS certificate files
+├── data/
+│   ├── raw/                     # Raw HDFS data and DVC-tracked data files
+│   │   ├── HDFS_v1/             # Full HDFS_v1 dataset, including HDFS.log
+│   │   └── HDFS_v1.dvc          # DVC pointer for the full dataset
+│   ├── sample/                  # HDFS_2k.log and its DVC pointer
+│   └── processed/               # Outputs produced by the data pipeline
+│       ├── parsed/              # Parsed log records
+│       ├── matched/             # Log records matched to Drain3 templates
+│       ├── sessions/            # Per-block session data
+│       ├── features/            # Train, validation and test feature matrices
+│       └── splits.csv           # Dataset split information
+│
+├── demo/                        # demo_logs.log and demo_labels.csv for the UI demonstration
+├── docker/                      # Dockerfiles and MLflow image dependencies
+│   ├── Dockerfile.backend
+│   ├── Dockerfile.frontend
+│   ├── Dockerfile.mlflow
+│   ├── requirements-mlflow.txt
+│   └── wheels/                  # Locally prepared Python wheels for the MLflow image
+│
+├── docs/                        # Project and usage documentation
+│   ├── architecture.md          # System architecture
+│   ├── HLD.md                   # High-level design
+│   ├── LLD.md                   # Low-level design and API details
+│   ├── design_notes.md          # Design decisions and rationale
+│   ├── test_plan.md             # Test plan and test cases
+│   ├── user_manual.md           # Instructions for application users
+│   ├── screenshots/             # Implementation and verification screenshots
+│   ├── screenshots.zip          # Archive of the screenshots
+│
+├── frontend/                    # Browser-based application and Nginx configuration
+│   ├── 40-config-js.sh          # Frontend runtime configuration helper
+│   ├── nginx.conf.template      # Nginx configuration template
+│   └── site/
+│       ├── index.html           # Main UI page
+│       ├── app.js               # Frontend application logic
+│       ├── config.js            # Frontend configuration
+│       ├── config.template.js   # Configuration template
+│       └── styles.css           # UI styles
+│
+├── models/                      # Model and preprocessing artifacts
+│   ├── drain3/                  # drain3_state.bin and mined templates.csv
+│   ├── features/                # vectorizer.json feature vocabulary/configuration
+│   ├── model/                   # classifier.joblib and meta.json
+│   └── pyfunc/                  # Packaged MLflow PyFunc model, environment and artifacts
+│
+├── monitoring/                  # Monitoring and alerting configuration
+│   ├── prometheus/              # Prometheus scrape and alert rules
+│   ├── grafana/                 # Grafana dashboards and provisioning
+│   └── alertmanager/            # Alertmanager configuration
+│
+├── notebooks/                   # Exploratory data analysis notebook
+│   └── 01_eda.ipynb
+│
+├── reports/                     # Generated pipeline and model reports
+│   ├── figures/                 # EDA, throughput and model evaluation plots
+│   │   └── training/            # Confusion matrix, PR curve and coefficient plots
+│   ├── tests/                   # test_report.md and junit.xml
+│   ├── benchmark.json           # Throughput benchmark results
+│   ├── train_metrics.json       # Model training and evaluation metrics
+│   ├── validation.json          # Data validation results
+│   └── *_stats*.json            # Stage-level pipeline statistics
+│
+├── scripts/                     # Utility, setup, CI and retraining scripts
+│   ├── ci.sh                    # Local CI checks
+│   ├── generate_traffic.py       # Traffic generation for monitoring tests
+│   ├── make_demo_logs.py        # Creates the demo log file
+│   ├── retrain_watcher.py       # Processes queued retraining requests
+│   ├── setup_secrets.sh         # Creates local environment and secret files
+│   └── test_report.py           # Generates the test summary report
+│
+├── src/                         # Core data and machine-learning pipeline code
+│   ├── ingest/                  # validate.py, split.py: data checks and splitting
+│   ├── parsing/                 # parse.py, mine_templates.py, match.py,
+│   │                            # sessionize.py, drain_config.py, benchmark.py
+│   ├── features/                # featurize.py and vectorizer.py
+│   ├── training/                # train.py and package.py
+│   ├── model/                   # logsentinel_model.py: model inference logic
+│   └── utils/                   # config.py, logger.py, run_stage.py, spark.py
+│
+├── tests/                       # Automated test suite
+│   ├── unit/                    # test_backend.py, test_drain_config.py,
+│   │                            # test_model_helpers.py, test_split.py,
+│   │                            # test_validate.py, test_vectorizer.py
+│   ├── integration/              # test_spark_stages.py and test_pyfunc_model.py
+│   ├── e2e/                     # test_stack.py
+│   └── conftest.py              # Shared pytest fixtures and configuration
+│
+├── feedback/                    # Stored user feedback data
+├── logs/                        # logsentinel.log and pipeline_runs.jsonl
+├── mlflow_data/                 # Local MLflow database (mlflow.db) and artifacts
+├── retrain_requests/             # Queued and processed retraining request records
+│
+├── README.md                     # Project overview, setup and usage instructions
+├── docker-compose.yml            # Multi-service application definition
+├── dvc.yaml                      # DVC pipeline stages and dependencies
+├── dvc.lock                      # Locked pipeline dependency and output versions
+├── params.yaml                   # Pipeline and model parameters
+├── MLproject                     # MLflow project entry points
+├── requirements.txt              # Main Python dependencies
+├── requirements-dev.txt          # Development and testing dependencies
+├── python_env.yaml               # Python environment definition
+├── pyproject.toml                # Python project and tooling configuration
+├── .dockerignore                 # Files excluded from Docker build contexts
+├── .pre-commit-config.yaml       # Pre-commit and pre-push hooks
+├── .dvcignore                    # Files excluded from DVC tracking
+├── .gitignore                    # Files excluded from Git
+└── .env.example                  # Example environment-variable configuration
+```
+
+### Where to look for common tasks
+
+- **Change the data pipeline:** start with `dvc.yaml`, `params.yaml` and the relevant module under `src/`.
+- **Change an API endpoint:** edit `backend/app/main.py`; request and response models are in `backend/app/schemas.py`.
+- **Change the web interface:** edit files under `frontend/site/`.
+- **Change model training or packaging:** use `src/training/` and `src/model/`; model artifacts are stored under `models/`.
+- **Change monitoring or alert rules:** see `monitoring/prometheus/`, `monitoring/grafana/` and `monitoring/alertmanager/`.
+- **Run or extend tests:** use `tests/unit/`, `tests/integration/` and `tests/e2e/`.
+- **Read project documentation:** start with `docs/architecture.md`, `docs/HLD.md`, `docs/LLD.md` and `docs/user_manual.md`.
+
+> **Note:** `data/processed/`, `models/`, `reports/`, `mlflow_data/`, `logs/` and `retrain_requests/` contain generated outputs or local runtime state. The `.dvc/` directory is DVC's local metadata/cache. Some local/runtime directories may not appear in the GitHub file listing. The actual `.env` file, TLS private keys and webhook tokens are local secrets; use `.env.example` as the configuration template and do not commit secret values.
+
 ## Requirements
 
 Ubuntu (or similar Linux), Python 3.14, Java 17 (for Spark), Docker + Docker Compose, ~30 GB free disk,
